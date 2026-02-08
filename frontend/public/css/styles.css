@@ -1,10 +1,10 @@
 /* =========================================
-   1. VARIABLES Y CONFIGURACIÓN BASE
+   VARIABLES Y CONFIGURACIÓN BASE
    ========================================= */
 @import url("https://fonts.googleapis.com/css2?family=Krona+One&family=Montserrat:wght@400;600&display=swap");
 
 :root {
-  /* Paleta de Colores Original */
+  /* Paleta de Colores */
   --color-fondo: #102e50; /* Azul oscuro */
   --color-sidebar: #0b1d36; /* Azul más oscuro */
   --color-texto: #fbf5de; /* Crema suave */
@@ -38,7 +38,7 @@ body {
 }
 
 /* =========================================
-   2. LAYOUT PRINCIPAL (La Estructura)
+   LAYOUT PRINCIPAL
    ========================================= */
 .layout-wrapper {
   display: flex;
@@ -46,18 +46,18 @@ body {
   width: 100%;
 }
 
-/* --- BARRA LATERAL (Izquierda) --- */
+/* --- Barra lateral --- */
 .sidebar-menu {
   width: var(--ancho-sidebar);
   background-color: var(--color-sidebar);
   height: 100vh;
-  position: fixed; /* Se queda quieta mientras scrolleas */
+  position: fixed; /* Fija mientras scrolleas */
   left: 0;
   top: 0;
   border-right: 1px solid rgba(209, 162, 115, 0.2);
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centra todo verticalmente */
+  justify-content: center; /* Centra contenido */
   align-items: center;
   padding: 2rem;
   z-index: 100;
@@ -65,7 +65,7 @@ body {
 }
 
 /* Foto de Perfil */
-.perfil-resumen img.sidebar-foto {
+.perfil-resumen img.sidebar-logo {
   width: 200px;
   height: 160px;
   object-fit: cover;
@@ -131,9 +131,9 @@ body {
   color: var(--color-acento);
 }
 
-/* --- ÁREA DE CONTENIDO (Derecha) --- */
+/* --- Área de contenido --- */
 .content-area {
-  margin-left: var(--ancho-sidebar); /* Deja espacio para la sidebar */
+  margin-left: var(--ancho-sidebar);
   width: calc(100% - var(--ancho-sidebar));
   padding: 0;
   display: flex;
@@ -141,21 +141,21 @@ body {
 }
 
 /* =========================================
-   3. SECCIONES (Estilo de cada pantalla)
+   SECCIONES DE CONTENIDO
    ========================================= */
 .seccion-contenido {
-  min-height: 100vh; /* Cada sección ocupa toda la pantalla */
-  padding: 4rem 10%; /* Espacio a los lados cómodo */
+  min-height: 100vh;
+  padding: 4rem 10%;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centrado vertical */
+  justify-content: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Títulos Generales */
+/* Títulos principales */
 .titulo-principal {
   font-family: var(--fuente-titulos);
-  font-size: 3rem; /* Tamaño grande pero controlado */
+  font-size: 3rem;
   line-height: 1.2;
   margin-bottom: 1.5rem;
 }
@@ -166,7 +166,7 @@ body {
 }
 
 .intro-texto,
-.texto-bloque p {
+.company-intro p {
   font-size: 1.1rem;
   max-width: 800px;
   opacity: 0.9;
@@ -182,7 +182,7 @@ body {
   display: inline-block;
 }
 
-/* Tarjetas (Skills / Proyectos) */
+/* Tarjetas (Skills y Proyectos) */
 .corporate-grid,
 .skills-grid {
   display: grid;
@@ -193,12 +193,17 @@ body {
 .corp-card,
 .skill-card {
   background: rgba(255, 255, 255, 0.03);
-  padding: 2rem;
+  padding: 2.5rem;
   border-radius: 12px;
   border: 1px solid transparent;
   transition:
     transform 0.3s ease,
     border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .corp-card:hover,
@@ -212,12 +217,12 @@ body {
 .skill-card h3 {
   font-family: var(--fuente-titulos);
   color: var(--color-acento);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   font-size: 1.2rem;
 }
 
 /* =========================================
-   4. FORMULARIO DE CONTACTO
+   FORMULARIO DE CONTACTO
    ========================================= */
 .contact-form {
   max-width: 600px;
@@ -273,15 +278,15 @@ body {
 }
 
 /* =========================================
-   5. RESPONSIVE (Móviles)
+   RESPONSIVE (Móviles)
    ========================================= */
 @media (max-width: 900px) {
   .layout-wrapper {
-    flex-direction: column; /* Apila todo verticalmente */
+    flex-direction: column;
   }
 
   .sidebar-menu {
-    position: relative; /* Ya no fija */
+    position: relative;
     width: 100%;
     height: auto;
     padding: 2rem 1rem;
@@ -289,7 +294,7 @@ body {
     border-bottom: 1px solid rgba(209, 162, 115, 0.2);
   }
 
-  .perfil-resumen img.sidebar-foto {
+  .perfil-resumen img.sidebar-logo {
     width: 120px;
     height: 120px;
   }
@@ -301,16 +306,11 @@ body {
 
   .seccion-contenido {
     padding: 3rem 5%;
-    min-height: auto; /* En móvil no forzamos altura completa */
+    min-height: auto;
     padding-bottom: 5rem;
   }
 
   .titulo-principal {
     font-size: 2rem;
-  }
-
-  /* Botón hamburguesa (si lo usas en JS) */
-  .hamburger-menu {
-    display: block; /* O ajusta según tu JS */
   }
 }

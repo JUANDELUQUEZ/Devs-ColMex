@@ -2,25 +2,19 @@
 // CONFIGURACIÓN
 // =============================================================================
 
-// CORREGIDO: Usamos un nombre estándar y claro
 const API_URL = "https://devs-colmex.onrender.com/api/mensajes";
-
-// CORREGIDO: Aumentado a 60 segundos porque Render tarda en despertar
-const TIMEOUT_MS = 60000;
+const TIMEOUT_MS = 60000; /* Render tarda en despertar */
 
 // =============================================================================
 // INICIALIZACIÓN DEL DOCUMENTO
 // =============================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // =========== INICIALIZAR MENÚ HAMBURGUESA ===========
   inicializarMenuHamburguesa();
 
-  // =========== INICIALIZAR FORMULARIO ===========
   const formulario = document.getElementById("contactForm");
-
   if (!formulario) {
-    console.warn("⚠️  Formulario de contacto no encontrado en el DOM");
+    console.warn("⚠️ Formulario no encontrado");
     return;
   }
 
@@ -37,17 +31,15 @@ function inicializarMenuHamburguesa() {
   const navLinks = document.querySelectorAll(".nav-link");
 
   if (!hamburgerBtn || !sidebarMenu) {
-    console.warn("Botón hamburguesa o sidebar no encontrados");
+    console.warn("Menú hamburguesa no encontrado");
     return;
   }
 
-  // Toggle del menú cuando se hace click en el botón
   hamburgerBtn.addEventListener("click", () => {
     hamburgerBtn.classList.toggle("active");
     sidebarMenu.classList.toggle("menu-open");
   });
 
-  // Cerrar menú cuando se hace click en un enlace de navegación
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {
       hamburgerBtn.classList.remove("active");
@@ -55,7 +47,6 @@ function inicializarMenuHamburguesa() {
     });
   });
 
-  // Cerrar menú cuando se hace resize (si se cambia de móvil a desktop)
   window.addEventListener("resize", () => {
     if (window.innerWidth > 768) {
       hamburgerBtn.classList.remove("active");

@@ -1,56 +1,27 @@
 <!doctype html>
 <html lang="es-mx">
-  <!-- ===================================================================== -->
-  <!-- HEAD - Metadatos, estilos e información de la página -->
-  <!-- ===================================================================== -->
   <head>
-    <!-- Codificación de caracteres UTF-8 -->
     <meta charset="UTF-8" />
-
-    <!-- Viewport para responsive design en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Título de la página (aparece en la pestaña del navegador) -->
-    <title>Devs-ColMex | Desarrollador Front-end</title>
-
-    <!-- Vinculación de estilos CSS -->
+    <title>Devs-ColMex | Desarrollo Web Profesional</title>
     <link rel="stylesheet" href="css/styles.css" />
-
-    <!-- Favicon (ícono que aparece en la pestaña) -->
     <link rel="icon" href="images/logo-devs-colmex.png" type="image/jpeg" />
   </head>
 
-  <!-- ===================================================================== -->
-  <!-- BODY - Contenido visible de la página -->
-  <!-- ===================================================================== -->
   <body>
-    <!-- Contenedor principal del layout -->
     <div class="layout-wrapper">
-      <!-- ================================================================= -->
-      <!-- BOTÓN HAMBURGUESA - Solo visible en móviles -->
-      <!-- ================================================================= -->
-      <button class="hamburger-menu" id="hamburgerBtn" aria-label="Menú">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-      <!-- ================================================================= -->
-      <!-- SIDEBAR - Barra lateral con perfil y navegación -->
-      <!-- ================================================================= -->
+      <!-- Sidebar de navegación y perfil -->
       <aside class="sidebar-menu" id="sidebarMenu">
-        <!-- Sección de perfil -->
         <div class="perfil-resumen">
           <img
             src="images/logo-devs-colmex.png"
-            alt="Logo de Devs-ColMex"
-            class="sidebar-foto"
+            alt="Logo Devs-ColMex"
+            class="sidebar-logo"
           />
           <h2>Devs-ColMex</h2>
           <p>Soluciones Web de Calidad</p>
         </div>
 
-        <!-- Navegación principal -->
         <nav class="navegacion">
           <a class="nav-link" href="#inicio">Inicio</a>
           <a class="nav-link" href="#nosotros">Sobre Nosotros</a>
@@ -59,54 +30,57 @@
           <a class="nav-link" href="#contacto">Contacto</a>
         </nav>
 
-        <!-- Footer del sidebar -->
-        <div class="sidebar-footer">
-          <!-- Enlaces a redes sociales -->
+        <footer class="sidebar-footer">
           <div class="redes-sociales">
-            <a href="https://www.linkedin.com/in/juan-deluquez" target="_blank"
+            <a
+              href="https://www.linkedin.com/in/juan-deluquez"
+              target="_blank"
+              rel="noopener noreferrer"
               >LinkedIn</a
             >
-            <a href="https://www.instagram.com/juandlz__/" target="_blank"
+            <a
+              href="https://www.instagram.com/juandlz__/"
+              target="_blank"
+              rel="noopener noreferrer"
               >Instagram</a
             >
-            <a href="https://github.com/JUANDELUQUEZ" target="_blank">GitHub</a>
+            <a
+              href="https://github.com/JUANDELUQUEZ"
+              target="_blank"
+              rel="noopener noreferrer"
+              >GitHub</a
+            >
           </div>
-          <!-- Copyright -->
-          <p class="copyright">&copy; 2025 Juan Deluquez</p>
-        </div>
+          <p class="copyright">&copy; 2026 Devs-ColMex</p>
+        </footer>
       </aside>
 
-      <!-- ================================================================= -->
-      <!-- MAIN CONTENT - Contenido principal -->
-      <!-- ================================================================= -->
+      <!-- Contenido principal -->
       <main class="content-area">
-        <!-- SECCIÓN: INICIO / HERO -->
+        <!-- Sección: Inicio -->
         <section id="inicio" class="seccion-contenido">
           <h1 class="titulo-principal">
-            Eleva tu negocio digital a otro nivel
-            <span class="destacado">con un Front-end de calidad</span>
+            Eleva tu negocio digital con nosotros
+            <span class="destacado">con un desarrollo de calidad</span>
           </h1>
-
           <p class="intro-texto">
-            <span class="resaltado">¡Hola! soy Juan Deluquez,</span>
-            desarrollador Front-end con especialidad en React, HTML y CSS. Ayudo
-            a pequeños negocios y diseñadores a llevar a cabo buenas ideas.
-            ¿Hablamos?
+            <strong>¡Bienvenido a Devs-ColMex!</strong>
+            Somos una consultora tecnológica especializada en React, HTML y CSS.
+            Ayudamos a pequeños negocios y diseñadores a convertir sus ideas en
+            realidad. ¿Hablamos?
           </p>
         </section>
 
-        <!-- SECCIÓN: SOBRE NOSOTROS -->
+        <!-- Sección: Sobre Nosotros -->
         <section id="nosotros" class="seccion-contenido">
           <h2 class="subtitulo">Nuestra Esencia</h2>
 
-          <!-- Introducción de la empresa -->
-          <div class="texto-bloque company-intro">
+          <div class="company-intro">
             <p>
               Somos una consultora tecnológica dedicada a la transformación
               digital de alto impacto. En
-              <span class="resaltado">Devs-ColMex</span>, convertimos ideas
-              complejas en ecosistemas digitales eficientes, escalables y
-              seguros.
+              <strong>Devs-ColMex</strong>, convertimos ideas complejas en
+              ecosistemas digitales eficientes, escalables y seguros.
             </p>
             <p>
               No somos solo proveedores de código; somos socios estratégicos.
@@ -117,10 +91,9 @@
             </p>
           </div>
 
-          <!-- Grid con tarjetas de misión, visión y enfoque -->
           <div class="corporate-grid">
             <div class="corp-card">
-              <h3 class="corp-title">Nuestra Misión</h3>
+              <h3>Nuestra Misión</h3>
               <p>
                 Democratizar el acceso a tecnología de primer nivel, permitiendo
                 que empresas de cualquier tamaño compitan globalmente con
@@ -129,7 +102,7 @@
             </div>
 
             <div class="corp-card">
-              <h3 class="corp-title">Nuestra Visión</h3>
+              <h3>Nuestra Visión</h3>
               <p>
                 Ser referentes en el desarrollo de soluciones web a medida,
                 reconocidos por nuestra calidad técnica, nuestra transparencia y
@@ -138,7 +111,7 @@
             </div>
 
             <div class="corp-card">
-              <h3 class="corp-title">Nuestro Enfoque</h3>
+              <h3>Nuestro Enfoque</h3>
               <p>
                 Priorizamos la arquitectura limpia y el rendimiento. Creemos en
                 el software que perdura, que es fácil de mantener y que está
@@ -148,36 +121,48 @@
           </div>
         </section>
 
-        <!-- SECCIÓN: HABILIDADES -->
+        <!-- Sección: Habilidades -->
         <section id="habilidades" class="seccion-contenido">
-          <h2 class="subtitulo">Mis Habilidades</h2>
+          <h2 class="subtitulo">Experticia Técnica</h2>
+          <p class="section-subtitle">
+            Tecnologías y herramientas especializadas para soluciones escalables
+          </p>
+          <br />
 
-          <!-- Grid de habilidades por categoría -->
           <div class="skills-grid">
             <div class="skill-card">
-              <h3>Desarrollo Back-end</h3>
-              <p>Java, Spring Boot, Node.js, Express, MongoDB, MySQL</p>
+              <h3>Back-end Development</h3>
+              <ul class="skill-list">
+                <li>Java & Spring Boot</li>
+                <li>Node.js & Express</li>
+                <li>MongoDB & MySQL</li>
+              </ul>
             </div>
             <div class="skill-card">
-              <h3>Desarrollo Front-end</h3>
-              <p>HTML5, CSS3, JavaScript, React, Diseño Responsivo</p>
+              <h3>Front-end Development</h3>
+              <ul class="skill-list">
+                <li>React & JavaScript</li>
+                <li>HTML5 & CSS3</li>
+                <li>Diseño Responsivo</li>
+              </ul>
             </div>
             <div class="skill-card">
-              <h3>Herramientas y Tecnologías</h3>
-              <p>Git, VS Code, Postman, Docker, APIs REST, Render</p>
+              <h3>DevOps & Tools</h3>
+              <ul class="skill-list">
+                <li>Git & GitHub</li>
+                <li>Docker & Render</li>
+                <li>APIs REST & Postman</li>
+              </ul>
             </div>
           </div>
         </section>
 
-        <!-- SECCIÓN: CONTACTO -->
+        <!-- Sección: Contacto -->
         <section id="contacto" class="seccion-contenido">
           <h2 class="subtitulo">Trabajemos Juntos</h2>
           <p>Déjame un mensaje y me pondré en contacto contigo.</p>
-          <br />
 
-          <!-- Formulario de contacto -->
           <form id="contactForm" class="contact-form">
-            <!-- Campo: Nombre -->
             <div class="form-group">
               <label for="nombre">Nombre Completo</label>
               <input
@@ -189,7 +174,6 @@
               />
             </div>
 
-            <!-- Campo: Email -->
             <div class="form-group">
               <label for="email">Correo Electrónico</label>
               <input
@@ -201,7 +185,6 @@
               />
             </div>
 
-            <!-- Campo: Mensaje -->
             <div class="form-group">
               <label for="mensaje">Mensaje</label>
               <textarea
@@ -213,18 +196,12 @@
               ></textarea>
             </div>
 
-            <!-- Botón de envío -->
             <button type="submit" class="btn-submit">Enviar Mensaje</button>
           </form>
         </section>
       </main>
     </div>
 
-    <!-- ================================================================= -->
-    <!-- SCRIPTS - Archivos JavaScript -->
-    <!-- ================================================================= -->
-
-    <!-- Script principal de la aplicación (manejo de formularios, interactividad) -->
     <script src="js/app.js"></script>
   </body>
 </html>
