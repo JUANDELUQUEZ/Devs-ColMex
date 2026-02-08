@@ -6,35 +6,736 @@
 
 /* Variables CSS para colores, dimensiones y tipografías */
 :root {
-  --color-primario: #102e50; /* Azul Navy - Color base del proyecto */
-  --color-secundario: #fbf5de; /* Crema/Blanco - Texto principal */
-  --color-terciario: #d1a273; /* Dorado - Acentos y destacados */
-  --color-cuarternario: #dc3c22; /* Rojo - Énfasis adicional */
+  --color-primario: #102e50;
+  --color-secundario: #fbf5de;
+  --color-terciario: #d1a273;
+  --color-cuarternario: #dc3c22;
 
-  --ancho-sidebar: 30%; /* Ancho del sidebar lateral */
-  --fuente-montserrat: "Montserrat", sans-serif; /* Tipografía regular */
-  --fuente-krona: "Krona One", sans-serif; /* Tipografía para títulos */
+  --ancho-sidebar: 30%;
+  --fuente-montserrat: "Montserrat", sans-serif;
+  --fuente-krona: "Krona One", sans-serif;
+
+  /* ESCALAS DE TAMAÑO RESPONSIVO */
+  --tamaño-base: 1rem;
+  --tamaño-titulo-principal: clamp(1.8rem, 5vw, 3rem);
+  --tamaño-subtitulo: clamp(1.5rem, 4vw, 2.5rem);
+  --tamaño-parrafo: clamp(0.95rem, 2vw, 1.1rem);
+  --tamaño-card-h3: clamp(1rem, 2.5vw, 1.3rem);
+
+  /* ESPACIADO ADAPTABLE */
+  --espaciado-pequeno: clamp(0.5rem, 1vw, 1rem);
+  --espaciado-medio: clamp(1rem, 2vw, 1.5rem);
+  --espaciado-grande: clamp(2rem, 4vw, 6rem);
+
+  /* MEDIA QUERY BREAKPOINTS (variables para referencia) */
+  /* 320px - 480px: Móviles pequeños */
+  /* 481px - 768px: Móviles grandes / Tablets pequeñas */
+  /* 769px - 1024px: Tablets */
+  /* 1025px - 1440px: Laptops */
+  /* 1441px+: Monitores grandes */
 }
 
-/* Reset global: eliminar márgenes y rellenos por defecto */
+/* Reset global */
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
 
-/* HTML: Activar scroll suave para enlaces internos */
+/* HTML - Scroll suave en todos los navegadores */
 html {
   scroll-behavior: smooth;
+  font-size: clamp(14px, 1.5vw, 18px);
 }
 
-/* Body: Estilos generales para todo el documento */
+/* Body - Estilos generales */
 body {
   background-color: var(--color-primario);
   color: var(--color-secundario);
   font-family: var(--fuente-montserrat);
-  overflow: hidden; /* El scroll está en .content-area, no en el body */
-  height: 100vh;
+  height: 100%;
+  width: 100%;
+}
+
+/* =========================================
+   2. LAYOUT PRINCIPAL - RESPONSIVE
+   ========================================= */
+.layout-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  flex-wrap: wrap;
+}
+
+/* --- 2.1 BARRA LATERAL (sidebar-menu) --- */
+.sidebar-menu {
+  width: var(--ancho-sidebar);
+  background-color: #0b1d36;
+  border-right: 2px solid var(--color-terciario);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--espaciado-grande);
+  text-align: center;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+/* Foto de perfil con tamaño escalable */
+.perfil-resumen img.sidebar-foto {
+  width: clamp(120px, 18vw, 220px);
+  height: clamp(100px, 15vw, 150px);
+  object-fit: cover;
+  border: 4px solid var(--color-terciario);
+  margin-bottom: var(--espaciado-medio);
+  border-radius: 12px;
+}
+
+.perfil-resumen h2 {
+  font-family: var(--fuente-krona);
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  color: var(--color-secundario);
+  margin-bottom: 0.5rem;
+}
+
+.perfil-resumen p {
+  color: var(--color-terciario);
+  font-weight: 600;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+}
+
+/* --- 2.2 NAVEGACIÓN VERTICAL --- */
+.navegacion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaciado-pequeno);
+  width: 100%;
+}
+
+.nav-link {
+  font-family: var(--fuente-krona);
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  color: var(--color-secundario);
+  text-decoration: none;
+  padding: var(--espaciado-pequeno);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.nav-link:hover {
+  background-color: rgba(209, 162, 115, 0.1);
+  color: var(--color-terciario);
+  transform: translateX(10px);
+}
+
+/* --- 2.3 FOOTER DEL SIDEBAR --- */
+.sidebar-footer .redes-sociales {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaciado-medio);
+  justify-content: center;
+  margin-bottom: var(--espaciado-medio);
+}
+
+.sidebar-footer a {
+  color: var(--color-terciario);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+  transition: color 0.3s;
+}
+
+.sidebar-footer a:hover {
+  color: var(--color-cuarternario);
+}
+
+.copyright {
+  font-size: clamp(0.6rem, 0.8vw, 0.7rem);
+  opacity: 0.7;
+}
+
+/* --- 2.4 ÁREA DE CONTENIDO (content-area) --- */
+.content-area {
+  width: calc(100% - var(--ancho-sidebar));
+  min-height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 0;
+  background-color: var(--color-primario);
+}
+
+/* =========================================
+   3. SECCIONES DE CONTENIDO - RESPONSIVE
+   ========================================= */
+.seccion-contenido {
+  min-height: 100vh;
+  padding: var(--espaciado-grande) clamp(2rem, 5vw, 10%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   3.1 SECCIÓN DE INICIO (#inicio)
+   ========================================= */
+.titulo-principal {
+  font-family: var(--fuente-krona);
+  font-size: var(--tamaño-titulo-principal);
+  line-height: 1.2;
+  margin-bottom: var(--espaciado-medio);
+  word-wrap: break-word;
+}
+
+.destacado {
+  color: var(--color-terciario);
+  display: block;
+  margin-top: var(--espaciado-pequeno);
+}
+
+.intro-texto {
+  font-size: var(--tamaño-parrafo);
+  line-height: 1.8;
+  max-width: 900px;
+}
+
+.resaltado {
+  color: var(--color-terciario);
+  font-weight: 600;
+}
+
+/* =========================================
+   3.2 SECCIÓN SOBRE NOSOTROS (#nosotros)
+   ========================================= */
+.subtitulo {
+  font-family: var(--fuente-krona);
+  font-size: var(--tamaño-subtitulo);
+  color: var(--color-terciario);
+  margin-bottom: var(--espaciado-grande);
+  text-align: left;
+}
+
+.texto-bloque p {
+  font-size: var(--tamaño-parrafo);
+  line-height: 1.8;
+  margin-bottom: var(--espaciado-medio);
+  max-width: 900px;
+}
+
+.company-intro {
+  margin-bottom: var(--espaciado-grande);
+  border-left: 5px solid var(--color-terciario);
+  padding-left: clamp(1rem, 3vw, 2rem);
+}
+
+/* Grid responsivo - Se adapta automáticamente */
+.corporate-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(250px, 80vw, 300px), 1fr)
+  );
+  gap: var(--espaciado-medio);
+  width: 100%;
+}
+
+.corp-card {
+  background-color: rgba(16, 46, 80, 0.5);
+  border: 1px solid rgba(209, 162, 115, 0.3);
+  border-radius: 4px;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.corp-card:hover {
+  border-color: var(--color-terciario);
+  transform: translateY(-5px);
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.corp-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--color-terciario);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.corp-card:hover::before {
+  transform: scaleX(1);
+}
+
+.corp-title {
+  font-family: var(--fuente-krona);
+  color: var(--color-terciario);
+  font-size: var(--tamaño-card-h3);
+  margin-bottom: var(--espaciado-medio);
+  position: relative;
+  display: inline-block;
+}
+
+.corp-card p {
+  font-family: var(--fuente-montserrat);
+  font-size: clamp(0.9rem, 1.8vw, 1rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* =========================================
+   3.3 SECCIÓN DE HABILIDADES (#habilidades)
+   ========================================= */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(200px, 75vw, 280px), 1fr)
+  );
+  gap: var(--espaciado-medio);
+  width: 100%;
+}
+
+.skill-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.skill-card:hover {
+  border-color: var(--color-terciario);
+  transform: translateY(-5px);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.skill-card h3 {
+  font-family: var(--fuente-krona);
+  color: var(--color-terciario);
+  margin-bottom: var(--espaciado-medio);
+  font-size: var(--tamaño-card-h3);
+}
+
+.skill-card p {
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* =========================================
+   3.4 SECCIÓN DE CONTACTO (#contacto)
+   ========================================= */
+.contact-form {
+  width: 100%;
+  max-width: 700px;
+}
+
+.form-group {
+  margin-bottom: var(--espaciado-medio);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--espaciado-pequeno);
+  color: var(--color-terciario);
+  font-weight: 600;
+  font-family: var(--fuente-krona);
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: clamp(0.8rem, 2vw, 1rem);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  font-family: var(--fuente-montserrat);
+  font-size: clamp(0.9rem, 1.8vw, 1rem);
+  transition: border-color 0.3s;
+  resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-terciario);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.btn-submit {
+  display: inline-block;
+  padding: clamp(0.9rem, 2vw, 1rem) clamp(2rem, 4vw, 2.5rem);
+  background-color: transparent;
+  color: var(--color-terciario);
+  border: 2px solid var(--color-terciario);
+  border-radius: 8px;
+  font-family: var(--fuente-krona);
+  font-size: clamp(0.9rem, 1.8vw, 1rem);
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.btn-submit:hover {
+  background-color: var(--color-terciario);
+  color: var(--color-primario);
+  transform: translateY(-2px);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   4. RESPONSIVE DESIGN - TABLETS (max-width: 1024px)
+   ========================================= */
+@media (max-width: 1024px) {
+  :root {
+    --ancho-sidebar: 100%;
+  }
+
+  .layout-wrapper {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar-menu {
+    width: 100%;
+    height: auto;
+    padding: var(--espaciado-medio);
+    border-right: none;
+    border-bottom: 2px solid var(--color-terciario);
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: var(--espaciado-medio);
+  }
+
+  .perfil-resumen {
+    flex: 1 1 auto;
+    min-width: 150px;
+  }
+
+  .perfil-resumen img.sidebar-foto {
+    width: clamp(80px, 12vw, 120px);
+    height: clamp(80px, 12vw, 120px);
+    margin-bottom: var(--espaciado-pequeño);
+  }
+
+  .perfil-resumen h2 {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+  }
+
+  .navegacion {
+    flex: 1 1 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--espaciado-medio);
+    justify-content: center;
+    align-items: center;
+    min-width: 250px;
+  }
+
+  .nav-link {
+    padding: var(--espaciado-pequeño) var(--espaciado-medio);
+    font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+  }
+
+  .sidebar-footer {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--espaciado-pequeño);
+  }
+
+  .sidebar-footer .redes-sociales {
+    margin-bottom: 0.5rem;
+  }
+
+  .content-area {
+    width: 100%;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .seccion-contenido {
+    min-height: auto;
+    padding: var(--espaciado-grande) clamp(1.5rem, 4vw, 5%);
+    padding-bottom: var(--espaciado-grande);
+  }
+
+  .company-intro {
+    border-left: none;
+    border-top: 4px solid var(--color-terciario);
+    padding-left: 0;
+    padding-top: var(--espaciado-medio);
+  }
+}
+
+/* =========================================
+   5. RESPONSIVE DESIGN - MÓVILES GRANDES (max-width: 768px)
+   ========================================= */
+@media (max-width: 768px) {
+  .sidebar-menu {
+    flex-direction: column;
+    text-align: center;
+    padding: var(--espaciado-medio);
+  }
+
+  .perfil-resumen {
+    width: 100%;
+  }
+
+  .perfil-resumen img.sidebar-foto {
+    width: clamp(70px, 20vw, 100px);
+    height: clamp(70px, 20vw, 100px);
+  }
+
+  .navegacion {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: var(--espaciado-pequeno);
+  }
+
+  .nav-link {
+    flex: 1;
+    text-align: center;
+    font-size: clamp(0.75rem, 2vw, 0.85rem);
+    padding: 0.5rem;
+  }
+
+  .sidebar-footer {
+    width: 100%;
+  }
+
+  .sidebar-footer .redes-sociales {
+    width: 100%;
+    justify-content: space-around;
+    gap: var(--espaciado-pequeno);
+  }
+
+  .sidebar-footer a {
+    font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+  }
+
+  .seccion-contenido {
+    padding: var(--espaciado-medio) var(--espaciado-medio);
+    min-height: auto;
+  }
+
+  .titulo-principal {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    margin-bottom: var(--espaciado-medio);
+  }
+
+  .subtitulo {
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    margin-bottom: var(--espaciado-medio);
+  }
+
+  .intro-texto {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+  }
+
+  .corporate-grid {
+    grid-template-columns: 1fr;
+    gap: var(--espaciado-pequeño);
+  }
+
+  .corp-card {
+    padding: var(--espaciado-medio);
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: var(--espaciado-medio);
+  }
+
+  .skill-card {
+    padding: var(--espaciado-medio);
+  }
+
+  .contact-form {
+    max-width: 100%;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 1rem;
+    font-size: clamp(0.85rem, 2vw, 0.9rem);
+  }
+}
+
+/* =========================================
+   6. RESPONSIVE DESIGN - MÓVILES PEQUEÑOS (max-width: 480px)
+   ========================================= */
+@media (max-width: 480px) {
+  :root {
+    --espaciado-grande: clamp(1.5rem, 3vw, 2rem);
+    --espaciado-medio: clamp(0.75rem, 1.5vw, 1rem);
+    --espaciado-pequeno: clamp(0.25rem, 1vw, 0.5rem);
+  }
+
+  .sidebar-menu {
+    padding: var(--espaciado-medio);
+    border-bottom: 2px solid var(--color-terciario);
+  }
+
+  .perfil-resumen h2 {
+    font-size: 1rem;
+  }
+
+  .perfil-resumen p {
+    font-size: 0.75rem;
+  }
+
+  .navegacion {
+    width: 100%;
+  }
+
+  .nav-link {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .seccion-contenido {
+    padding: var(--espaciado-medio);
+    min-height: auto;
+    padding-bottom: 2rem;
+  }
+
+  .titulo-principal {
+    font-size: 1.4rem;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+  }
+
+  .subtitulo {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .intro-texto {
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .corp-card,
+  .skill-card {
+    padding: 1rem;
+  }
+
+  .corp-title,
+  .skill-card h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .corp-card p,
+  .skill-card p {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .form-group label {
+    font-size: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .sidebar-footer .redes-sociales {
+    gap: 0.5rem;
+  }
+
+  .sidebar-footer a {
+    font-size: 0.6rem;
+  }
+
+  .copyright {
+    font-size: 0.55rem;
+  }
+}
+
+/* =========================================
+   7. OPTIMIZACIONES FINALES
+   ========================================= */
+
+/* Scrollbar personalizada en navegadores Chrome/Edge */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-terciario);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cuarternario);
+}
+
+/* Optimización de rendimiento */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Evitar zoom en inputs en móviles */
+input,
+textarea,
+select {
+  font-size: 16px;
 }
 
 /* =========================================
@@ -296,145 +997,4 @@ body {
   border-radius: 12px;
   border: 1px solid transparent;
   transition: all 0.3s ease;
-}
-
-/* Efecto hover en tarjeta de habilidad */
-.skill-card:hover {
-  border-color: var(--color-terciario);
-  transform: translateY(-5px);
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-.skill-card h3 {
-  font-family: var(--fuente-krona);
-  color: var(--color-terciario);
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-}
-
-/* =========================================
-   3.4 SECCIÓN DE CONTACTO (#contacto)
-   ========================================= */
-/* Contenedor del formulario de contacto */
-.contact-form {
-  width: 100%;
-  max-width: 700px;
-}
-
-/* Grupo de un campo del formulario (input + label) */
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-/* Etiqueta del formulario */
-.form-group label {
-  display: block;
-  margin-bottom: 0.8rem;
-  color: var(--color-terciario);
-  font-weight: 600;
-  font-family: var(--fuente-krona);
-  font-size: 0.9rem;
-}
-
-/* Inputs y textarea con estilo personalizado */
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 15px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: white;
-  font-family: var(--fuente-montserrat);
-  font-size: 1rem;
-  transition: border-color 0.3s;
-}
-
-/* Estado focus en inputs y textarea */
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: var(--color-terciario);
-}
-
-/* Botón de envío del formulario */
-.btn-submit {
-  display: inline-block;
-  padding: 15px 40px;
-  background-color: transparent;
-  color: var(--color-terciario);
-  border: 2px solid var(--color-terciario);
-  border-radius: 8px;
-  font-family: var(--fuente-krona);
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.btn-submit:hover {
-  background-color: var(--color-terciario);
-  color: var(--color-primario);
-}
-
-/* =========================================
-   4. RESPONSIVE DESIGN - DISPOSITIVOS MÓVILES
-   ========================================= */
-/* Se activa cuando la pantalla es menor a 1024px (tablets y móviles) */
-@media (max-width: 1024px) {
-  /* Cambia el layout de lado a lado a apilado verticalmente */
-  .layout-wrapper {
-    flex-direction: column;
-    height: auto;
-    overflow: visible;
-  }
-
-  /* El sidebar se convierte en un header horizontal */
-  .sidebar-menu {
-    width: 100%;
-    height: auto;
-    padding: 2rem 1rem;
-    position: relative;
-    border-right: none;
-    border-bottom: 2px solid var(--color-terciario);
-  }
-
-  /* Foto de perfil más pequeña en móvil */
-  .perfil-resumen img.sidebar-foto {
-    width: 100px;
-    height: 100px;
-  }
-
-  /* Content-area ocupa todo el ancho disponible */
-  .content-area {
-    width: 100%;
-    height: auto;
-    overflow: visible;
-  }
-
-  /* Secciones con padding ajustado */
-  .seccion-contenido {
-    padding: 4rem 5%;
-    min-height: auto;
-    padding-bottom: 4rem;
-  }
-
-  /* Títulos más pequeños en móvil */
-  .titulo-principal {
-    font-size: 2rem;
-  }
-
-  .subtitulo {
-    font-size: 1.8rem;
-  }
-}
-
-/* Se activa cuando la pantalla es menor a 768px (móviles pequeños) */
-@media (max-width: 768px) {
-  /* Línea lateral se convierte en línea superior */
-  .company-intro {
-    border-left: none;
-    border-top: 4px solid var(--color-terciario);
-    padding-left: 0;
-    padding-top: 1rem;
-  }
 }
