@@ -13,16 +13,56 @@ const TIMEOUT_MS = 60000;
 // =============================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  const formulario = document.getElementById("contactForm"); // Asegúrate que tu form tenga este ID en el HTML
+  // =========== INICIALIZAR MENÚ HAMBURGUESA ===========
+  inicializarMenuHamburguesa();
+
+  // =========== INICIALIZAR FORMULARIO ===========
+  const formulario = document.getElementById("contactForm");
 
   if (!formulario) {
     console.warn("⚠️  Formulario de contacto no encontrado en el DOM");
     return;
   }
 
-  // Asignar evento de envío del formulario
   formulario.addEventListener("submit", manejarEnvioFormulario);
 });
+
+// =============================================================================
+// MENÚ HAMBURGUESA - FUNCIONES PARA DISPOSITIVOS MÓVILES
+// =============================================================================
+
+function inicializarMenuHamburguesa() {
+  const hamburgerBtn = document.getElementById("hamburgerBtn");
+  const sidebarMenu = document.getElementById("sidebarMenu");
+  const navLinks = document.querySelectorAll(".nav-link");
+
+  if (!hamburgerBtn || !sidebarMenu) {
+    console.warn("Botón hamburguesa o sidebar no encontrados");
+    return;
+  }
+
+  // Toggle del menú cuando se hace click en el botón
+  hamburgerBtn.addEventListener("click", () => {
+    hamburgerBtn.classList.toggle("active");
+    sidebarMenu.classList.toggle("menu-open");
+  });
+
+  // Cerrar menú cuando se hace click en un enlace de navegación
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      hamburgerBtn.classList.remove("active");
+      sidebarMenu.classList.remove("menu-open");
+    });
+  });
+
+  // Cerrar menú cuando se hace resize (si se cambia de móvil a desktop)
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      hamburgerBtn.classList.remove("active");
+      sidebarMenu.classList.remove("menu-open");
+    }
+  });
+}
 
 // =============================================================================
 // FUNCIONES AUXILIARES
