@@ -1,0 +1,440 @@
+/* =========================================
+   1. VARIABLES Y RESET GLOBAL
+   ========================================= */
+/* Importar tipografías desde Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Krona+One&family=Montserrat:wght@400;600&display=swap");
+
+/* Variables CSS para colores, dimensiones y tipografías */
+:root {
+  --color-primario: #102e50; /* Azul Navy - Color base del proyecto */
+  --color-secundario: #fbf5de; /* Crema/Blanco - Texto principal */
+  --color-terciario: #d1a273; /* Dorado - Acentos y destacados */
+  --color-cuarternario: #dc3c22; /* Rojo - Énfasis adicional */
+
+  --ancho-sidebar: 30%; /* Ancho del sidebar lateral */
+  --fuente-montserrat: "Montserrat", sans-serif; /* Tipografía regular */
+  --fuente-krona: "Krona One", sans-serif; /* Tipografía para títulos */
+}
+
+/* Reset global: eliminar márgenes y rellenos por defecto */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* HTML: Activar scroll suave para enlaces internos */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Body: Estilos generales para todo el documento */
+body {
+  background-color: var(--color-primario);
+  color: var(--color-secundario);
+  font-family: var(--fuente-montserrat);
+  overflow: hidden; /* El scroll está en .content-area, no en el body */
+  height: 100vh;
+}
+
+/* =========================================
+   2. LAYOUT PRINCIPAL - ESTRUCTURA 30/70
+   ========================================= */
+/* Contenedor principal que divide la pantalla en sidebar (30%) y contenido (70%) */
+.layout-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* --- 2.1 BARRA LATERAL (sidebar-menu) --- */
+/* Barra vertical izquierda que contiene perfil, navegación y redes sociales */
+.sidebar-menu {
+  width: var(--ancho-sidebar);
+  background-color: #0b1d36; /* Azul más oscuro que el primario */
+  border-right: 2px solid var(--color-terciario);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribuye: perfil arriba, nav en medio, footer abajo */
+  align-items: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  z-index: 10;
+}
+
+/* Sección de perfil en el sidebar */
+.perfil-resumen img.sidebar-foto {
+  width: 220px;
+  height: 150px;
+  object-fit: cover;
+  border: 4px solid var(--color-terciario);
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+}
+
+.perfil-resumen h2 {
+  font-family: var(--fuente-krona);
+  font-size: 1.5rem;
+  color: var(--color-secundario);
+  margin-bottom: 0.5rem;
+}
+
+.perfil-resumen p {
+  color: var(--color-terciario);
+  font-weight: 600;
+}
+
+/* --- 2.2 NAVEGACIÓN VERTICAL --- */
+/* Menú de links principales en el sidebar */
+.navegacion {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.nav-link {
+  font-family: var(--fuente-krona);
+  font-size: 1.1rem;
+  color: var(--color-secundario);
+  text-decoration: none;
+  padding: 10px;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.nav-link:hover {
+  background-color: rgba(209, 162, 115, 0.1);
+  color: var(--color-terciario);
+  transform: translateX(10px); /* Desplaza hacia la derecha */
+}
+
+/* --- 2.3 FOOTER DEL SIDEBAR --- */
+/* Sección inferior con redes sociales y copyright */
+.sidebar-footer .redes-sociales {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.sidebar-footer a {
+  color: var(--color-terciario);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.sidebar-footer a:hover {
+  color: var(--color-cuarternario);
+}
+
+.copyright {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+/* --- 2.4 ÁREA DE CONTENIDO (content-area) --- */
+/* Contenedor principal derecho donde se renderiza todo el contenido scrolleable */
+.content-area {
+  width: calc(100% - var(--ancho-sidebar));
+  height: 100vh;
+  overflow-y: auto; /* Solo esta sección hace scroll vertical */
+  scroll-behavior: smooth;
+  padding: 0;
+  background-color: var(--color-primario);
+}
+
+/* =========================================
+   3. SECCIONES DE CONTENIDO
+   ========================================= */
+/* Contenedor base para cada sección principal (#inicio, #nosotros, #habilidades, #contacto) */
+.seccion-contenido {
+  min-height: 100vh; /* Mínimo una pantalla completa */
+  padding: 6rem 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Separador visual sutil */
+}
+
+/* =========================================
+   3.1 SECCIÓN DE INICIO (#inicio)
+   ========================================= */
+/* Título principal de bienvenida */
+.titulo-principal {
+  font-family: var(--fuente-krona);
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 2rem;
+}
+
+/* Palabra destacada que salta a nueva línea */
+.destacado {
+  color: var(--color-terciario);
+  display: block;
+}
+
+/* Texto introductorio con información personal */
+.intro-texto {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  max-width: 800px;
+}
+
+/* Palabra resaltada dentro de párrafos */
+.resaltado {
+  color: var(--color-terciario);
+  font-weight: 600;
+}
+
+/* =========================================
+   3.2 SECCIÓN SOBRE NOSOTROS (#nosotros)
+   ========================================= */
+/* Subtítulo para secciones */
+.subtitulo {
+  font-family: var(--fuente-krona);
+  font-size: 2.5rem;
+  color: var(--color-terciario);
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+/* Texto en bloques para contenido corporativo */
+.texto-bloque p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  max-width: 900px;
+}
+
+/* Introducción de la empresa con línea decorativa lateral */
+.company-intro {
+  margin-bottom: 4rem;
+  border-left: 5px solid var(--color-terciario);
+  padding-left: 2rem;
+}
+
+/* Grid de tarjetas corporativas (Misión, Visión, Enfoque) */
+.corporate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Tarjetas individuales de contenido corporativo */
+.corp-card {
+  background-color: rgba(16, 46, 80, 0.5);
+  border: 1px solid rgba(209, 162, 115, 0.3);
+  border-radius: 4px;
+  padding: 2.5rem 2rem;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto hover: resalta la tarjeta */
+.corp-card:hover {
+  border-color: var(--color-terciario);
+  transform: translateY(-5px);
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Línea decorativa en la parte superior de la tarjeta (se anima al hover) */
+.corp-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--color-terciario);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.corp-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Título dentro de las tarjetas corporativas */
+.corp-title {
+  font-family: var(--fuente-krona);
+  color: var(--color-terciario);
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.corp-card p {
+  font-family: var(--fuente-montserrat);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* =========================================
+   3.3 SECCIÓN DE HABILIDADES (#habilidades)
+   ========================================= */
+/* Grid responsivo para mostrar tarjetas de habilidades */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+/* Tarjeta individual de habilidad (Backend, Frontend, Herramientas) */
+.skill-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+/* Efecto hover en tarjeta de habilidad */
+.skill-card:hover {
+  border-color: var(--color-terciario);
+  transform: translateY(-5px);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.skill-card h3 {
+  font-family: var(--fuente-krona);
+  color: var(--color-terciario);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+/* =========================================
+   3.4 SECCIÓN DE CONTACTO (#contacto)
+   ========================================= */
+/* Contenedor del formulario de contacto */
+.contact-form {
+  width: 100%;
+  max-width: 700px;
+}
+
+/* Grupo de un campo del formulario (input + label) */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* Etiqueta del formulario */
+.form-group label {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: var(--color-terciario);
+  font-weight: 600;
+  font-family: var(--fuente-krona);
+  font-size: 0.9rem;
+}
+
+/* Inputs y textarea con estilo personalizado */
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  font-family: var(--fuente-montserrat);
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+/* Estado focus en inputs y textarea */
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-terciario);
+}
+
+/* Botón de envío del formulario */
+.btn-submit {
+  display: inline-block;
+  padding: 15px 40px;
+  background-color: transparent;
+  color: var(--color-terciario);
+  border: 2px solid var(--color-terciario);
+  border-radius: 8px;
+  font-family: var(--fuente-krona);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-submit:hover {
+  background-color: var(--color-terciario);
+  color: var(--color-primario);
+}
+
+/* =========================================
+   4. RESPONSIVE DESIGN - DISPOSITIVOS MÓVILES
+   ========================================= */
+/* Se activa cuando la pantalla es menor a 1024px (tablets y móviles) */
+@media (max-width: 1024px) {
+  /* Cambia el layout de lado a lado a apilado verticalmente */
+  .layout-wrapper {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* El sidebar se convierte en un header horizontal */
+  .sidebar-menu {
+    width: 100%;
+    height: auto;
+    padding: 2rem 1rem;
+    position: relative;
+    border-right: none;
+    border-bottom: 2px solid var(--color-terciario);
+  }
+
+  /* Foto de perfil más pequeña en móvil */
+  .perfil-resumen img.sidebar-foto {
+    width: 100px;
+    height: 100px;
+  }
+
+  /* Content-area ocupa todo el ancho disponible */
+  .content-area {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Secciones con padding ajustado */
+  .seccion-contenido {
+    padding: 4rem 5%;
+    min-height: auto;
+    padding-bottom: 4rem;
+  }
+
+  /* Títulos más pequeños en móvil */
+  .titulo-principal {
+    font-size: 2rem;
+  }
+
+  .subtitulo {
+    font-size: 1.8rem;
+  }
+}
+
+/* Se activa cuando la pantalla es menor a 768px (móviles pequeños) */
+@media (max-width: 768px) {
+  /* Línea lateral se convierte en línea superior */
+  .company-intro {
+    border-left: none;
+    border-top: 4px solid var(--color-terciario);
+    padding-left: 0;
+    padding-top: 1rem;
+  }
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es-mx">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portafolio</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <nav class="navegacion">
+        <a class="navegacion-link" href="index.html">Home</a>
+        <a class="navegacion-link" href="about.html">Sobre mí</a>
+      </nav>
+    </header>
+    <main class="contenedor">
+      <section class="contenido-texto">
+        <h1 class="titulo">
+          Eleva tu negocio digital a otro nivel
+          <strong class="titulo-destacado">con un Front-end de calidad</strong>
+        </h1>
+
+        <p class="parrafo">
+          <strong class="parrafo-destacado">!Hola¡ soy Juan Deluquez,</strong>
+          desarrollador Front-end con especialidad en React, HTML y CSS. Ayudo a
+          pequeños negocios y diseñadores a llevar a cabo buenas ideas.
+          ¿Hablamos?
+        </p>
+
+        <div class="enlaces">
+          <h2 class="presentacion-enlaces-subtitulo">
+            <strong>Accede a mis redes</strong>
+          </h2>
+          <a
+            class="enlace-link"
+            href="https://www.linkedin.com/in/juan-deluquez"
+            ><img src="images/linkedin.png" alt="linkedln" /><strong
+              class="resaltado"
+              >Linkedln</strong
+            ></a
+          >
+
+          <a class="enlace-link" href="https://www.instagram.com/juandlz__/"
+            ><img src="images/instagram.png" alt="instagram" /><strong
+              class="resaltado"
+              >Intragram</strong
+            ></a
+          >
+
+          <a class="enlace-link" href="https://github.com/JUANDELUQUEZ">
+            <img src="images/github.png" alt="git-hub" /><strong
+              class="resaltado"
+              >GitHub</strong
+            ></a
+          >
+        </div>
+      </section>
+      <img
+        class="presentacion-fotografica"
+        src="images/juancho2.jpg"
+        alt="Imagen de juancho sexy"
+      />
+      <section id="skills" class="section-container">
+        <h2 class="section-title">Mis Habilidades</h2>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <h3>Backend</h3>
+            <p>Java, Spring Boot, MySQL</p>
+          </div>
+          <div class="skill-card">
+            <h3>Frontend</h3>
+            <p>HTML5, CSS3, JavaScript</p>
+          </div>
+          <div class="skill-card">
+            <h3>Herramientas</h3>
+            <p>Git, VS Code, Postman</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="contacto" class="section-container">
+        <h2 class="section-title">Trabajemos Juntos</h2>
+        <p class="section-subtitle">
+          Déjame un mensaje y me pondré en contacto contigo.
+        </p>
+
+        <form id="contactForm" class="contact-form">
+          <div class="form-group">
+            <label for="nombre">Nombre Completo</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              placeholder="Ej. Juan Pérez"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo Electrónico</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="ejemplo@correo.com"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="mensaje">Mensaje</label>
+            <textarea
+              id="mensaje"
+              name="mensaje"
+              rows="5"
+              placeholder="Cuéntame sobre tu proyecto..."
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">Enviar Mensaje</button>
+        </form>
+      </section>
+    </main>
+    <footer class="footer">
+      <p>
+        &copy; 2025 Desarrollado por Juan Deluquez - Todos los derechos
+        reservados
+      </p>
+    </footer>
+  </body>
+</html>

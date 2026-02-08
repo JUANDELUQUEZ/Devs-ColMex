@@ -1,0 +1,11 @@
+# Ignorar librerías pesadas (en cualquier lugar)
+node_modules/
+backend/node_modules/
+
+# Ignorar secretos de seguridad
+.env
+backend/.env
+
+# Ignorar basura del sistema
+.DS_Store
+Thumbs.db
