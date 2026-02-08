@@ -67,15 +67,31 @@ console.log(
     : "❌ VACÍA",
 );
 
+// Validar que todas las variables necesarias estén definidas
+if (
+  !process.env.DB_HOST ||
+  !process.env.DB_USER ||
+  !process.env.DB_PASSWORD ||
+  !process.env.DB_NAME
+) {
+  console.error(
+    "❌ ERROR: Falta configurar las variables de entorno de la Base de Datos",
+  );
+  process.exit(1);
+}
+
 const db = mysql.createConnection({
-  host: process.env.DB_HOST ? process.env.DB_HOST.trim() : "",
-  user: process.env.DB_USER ? process.env.DB_USER.trim() : "",
-  password: process.env.DB_PASSWORD ? process.env.DB_PASSWORD.trim() : "",
-  database: process.env.DB_NAME ? process.env.DB_NAME.trim() : "",
-  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306, // Forzamos que sea un número
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  host: process.env.DB_HOST.trim(),
+  user: process.env.DB_USER.trim(),
+  password: process.env.DB_PASSWORD.trim(),
+  database: process.env.DB_NAME.trim(),
+  port: Number(process.env.DB_PORT) || 3306,
+  waitForConnections: true,
+  connectionLimit: 1,
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelayMs: 0,
+  ssl: "amazon",
 });
 
 // =============================================================================
@@ -90,12 +106,35 @@ const db = mysql.createConnection({
 db.connect((err) => {
   if (err) {
     console.error("❌ Error conectando a MySQL:", err.message);
-    process.exit(1);
+    console.error("⚠️  Reintentando conexión en 5 segundos...");
+    setTimeout(() => {
+      db.connect();
+    }, 5000);
+    return;
   }
   console.log("✅ Conectado a MySQL correctamente.");
 
   // Crear tabla de mensajes si no existe
   initializeDatabase();
+});
+
+// Manejar desconexiones inesperadas
+db.on("error", (err) => {
+  console.error("❌ Error en la conexión de MySQL:", err);
+  if (err.code === "PROTOCOL_CONNECTION_LOST") {
+    console.log("🔄 Reconectando a la base de datos...");
+    db.connect();
+  }
+  if (err.code === "ER_CON_COUNT_ERROR") {
+    console.log("🔄 Demasiadas conexiones. Reconectando...");
+    setTimeout(() => {
+      db.connect();
+    }, 2000);
+  }
+  if (err.code === "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
+    console.log("🔄 Fatal error. Reconectando...");
+    db.connect();
+  }
 });
 
 /**
