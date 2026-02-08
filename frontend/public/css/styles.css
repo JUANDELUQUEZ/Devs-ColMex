@@ -1,507 +1,316 @@
 /* =========================================
-   1. VARIABLES Y RESET GLOBAL
+   1. VARIABLES Y CONFIGURACIÓN BASE
    ========================================= */
-/* Importar tipografías desde Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Krona+One&family=Montserrat:wght@400;600&display=swap");
 
-/* Variables CSS para colores, dimensiones y tipografías */
 :root {
-  --color-primario: #102e50;
-  --color-secundario: #fbf5de;
-  --color-terciario: #d1a273;
-  --color-cuarternario: #dc3c22;
+  /* Paleta de Colores Original */
+  --color-fondo: #102e50; /* Azul oscuro */
+  --color-sidebar: #0b1d36; /* Azul más oscuro */
+  --color-texto: #fbf5de; /* Crema suave */
+  --color-acento: #d1a273; /* Dorado */
+  --color-hover: #dc3c22; /* Rojo/Naranja */
 
-  --ancho-sidebar: 30%;
-  --fuente-montserrat: "Montserrat", sans-serif;
-  --fuente-krona: "Krona One", sans-serif;
+  /* Tipografías */
+  --fuente-titulos: "Krona One", sans-serif;
+  --fuente-cuerpo: "Montserrat", sans-serif;
 
-  /* ESCALAS DE TAMAÑO RESPONSIVO */
-  --tamaño-base: 1rem;
-  --tamaño-titulo-principal: clamp(1.8rem, 5vw, 3rem);
-  --tamaño-subtitulo: clamp(1.5rem, 4vw, 2.5rem);
-  --tamaño-parrafo: clamp(0.95rem, 2vw, 1.1rem);
-  --tamaño-card-h3: clamp(1rem, 2.5vw, 1.3rem);
-
-  /* ESPACIADO ADAPTABLE */
-  --espaciado-pequeno: clamp(0.5rem, 1vw, 1rem);
-  --espaciado-medio: clamp(1rem, 2vw, 1.5rem);
-  --espaciado-grande: clamp(2rem, 4vw, 6rem);
-
-  /* MEDIA QUERY BREAKPOINTS (variables para referencia) */
-  /* 320px - 480px: Móviles pequeños */
-  /* 481px - 768px: Móviles grandes / Tablets pequeñas */
-  /* 769px - 1024px: Tablets */
-  /* 1025px - 1440px: Laptops */
-  /* 1441px+: Monitores grandes */
+  /* Dimensiones */
+  --ancho-sidebar: 300px; /* Tamaño fijo, más estable que porcentajes */
 }
 
-/* Reset global */
 * {
-  padding: 0;
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-/* HTML - Scroll suave en todos los navegadores */
 html {
   scroll-behavior: smooth;
-  font-size: clamp(14px, 1.5vw, 18px);
 }
 
-/* Body - Estilos generales */
 body {
-  background-color: var(--color-primario);
-  color: var(--color-secundario);
-  font-family: var(--fuente-montserrat);
-  height: 100%;
-  width: 100%;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente-cuerpo);
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 /* =========================================
-   2. LAYOUT PRINCIPAL - RESPONSIVE
+   2. LAYOUT PRINCIPAL (La Estructura)
    ========================================= */
 .layout-wrapper {
   display: flex;
-  width: 100%;
   min-height: 100vh;
-  flex-wrap: wrap;
-  position: relative;
-}
-
-/* BOTÓN HAMBURGUESA - Solo visible en móviles */
-.hamburger-menu {
-  display: none;
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  z-index: 1000;
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 0;
-}
-
-.hamburger-menu span {
   width: 100%;
-  height: 4px;
-  background-color: var(--color-terciario);
-  display: block;
-  transition: all 0.3s ease;
-  border-radius: 2px;
 }
 
-/* Animación del hamburger cuando está activo */
-.hamburger-menu.active span:nth-child(1) {
-  transform: rotate(45deg) translate(12px, 12px);
-}
-
-.hamburger-menu.active span:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger-menu.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(8px, -8px);
-}
-
-/* --- 2.1 BARRA LATERAL (sidebar-menu) --- */
+/* --- BARRA LATERAL (Izquierda) --- */
 .sidebar-menu {
   width: var(--ancho-sidebar);
-  background-color: #0b1d36;
-  border-right: 2px solid var(--color-terciario);
+  background-color: var(--color-sidebar);
+  height: 100vh;
+  position: fixed; /* Se queda quieta mientras scrolleas */
+  left: 0;
+  top: 0;
+  border-right: 1px solid rgba(209, 162, 115, 0.2);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center; /* Centra todo verticalmente */
   align-items: center;
-  padding: var(--espaciado-grande);
+  padding: 2rem;
+  z-index: 100;
   text-align: center;
-  z-index: 10;
-  transition: all 0.3s ease;
 }
 
-/* Foto de perfil con tamaño escalable */
+/* Foto de Perfil */
 .perfil-resumen img.sidebar-foto {
-  width: clamp(120px, 18vw, 220px);
-  height: clamp(100px, 15vw, 150px);
+  width: 160px;
+  height: 160px;
   object-fit: cover;
-  border: 4px solid var(--color-terciario);
-  margin-bottom: var(--espaciado-medio);
-  border-radius: 12px;
+  border-radius: 50%; /* Círculo perfecto */
+  border: 3px solid var(--color-acento);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .perfil-resumen h2 {
-  font-family: var(--fuente-krona);
-  font-size: clamp(1.2rem, 3vw, 1.5rem);
-  color: var(--color-secundario);
+  font-family: var(--fuente-titulos);
+  font-size: 1.4rem;
   margin-bottom: 0.5rem;
+  color: var(--color-texto);
 }
 
 .perfil-resumen p {
-  color: var(--color-terciario);
+  color: var(--color-acento);
   font-weight: 600;
-  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  margin-bottom: 2rem;
 }
 
-/* --- 2.2 NAVEGACIÓN VERTICAL --- */
+/* Navegación */
 .navegacion {
   display: flex;
   flex-direction: column;
-  gap: var(--espaciado-pequeno);
+  gap: 1rem;
   width: 100%;
 }
 
 .nav-link {
-  font-family: var(--fuente-krona);
-  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
-  color: var(--color-secundario);
+  font-family: var(--fuente-titulos);
   text-decoration: none;
-  padding: var(--espaciado-pequeno);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  padding: 0.8rem;
   transition: all 0.3s ease;
   border-radius: 8px;
 }
 
 .nav-link:hover {
-  background-color: rgba(209, 162, 115, 0.1);
-  color: var(--color-terciario);
-  transform: translateX(10px);
+  color: var(--color-acento);
+  background-color: rgba(255, 255, 255, 0.05);
+  transform: translateX(5px);
 }
 
-/* --- 2.3 FOOTER DEL SIDEBAR --- */
-.sidebar-footer .redes-sociales {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--espaciado-medio);
-  justify-content: center;
-  margin-bottom: var(--espaciado-medio);
+/* Footer Sidebar (Redes) */
+.sidebar-footer {
+  margin-top: auto; /* Empuja al fondo */
+  padding-top: 2rem;
 }
 
-.sidebar-footer a {
-  color: var(--color-terciario);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: clamp(0.75rem, 1vw, 0.9rem);
+.sidebar-footer .redes-sociales a {
+  color: var(--color-texto);
+  margin: 0 8px;
+  font-size: 1.2rem;
   transition: color 0.3s;
 }
 
-.sidebar-footer a:hover {
-  color: var(--color-cuarternario);
+.sidebar-footer .redes-sociales a:hover {
+  color: var(--color-acento);
 }
 
-.copyright {
-  font-size: clamp(0.6rem, 0.8vw, 0.7rem);
-  opacity: 0.7;
-}
-
-/* --- 2.4 ÁREA DE CONTENIDO (content-area) --- */
+/* --- ÁREA DE CONTENIDO (Derecha) --- */
 .content-area {
+  margin-left: var(--ancho-sidebar); /* Deja espacio para la sidebar */
   width: calc(100% - var(--ancho-sidebar));
-  min-height: 100vh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
   padding: 0;
-  background-color: var(--color-primario);
-}
-
-/* =========================================
-   3. SECCIONES DE CONTENIDO - RESPONSIVE
-   ========================================= */
-.seccion-contenido {
-  min-height: 100vh;
-  padding: var(--espaciado-grande) clamp(2rem, 5vw, 10%);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  animation: fadeIn 0.6s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* =========================================
-   3.1 SECCIÓN DE INICIO (#inicio)
+   3. SECCIONES (Estilo de cada pantalla)
    ========================================= */
-#inicio {
-  position: relative;
+.seccion-contenido {
+  min-height: 100vh; /* Cada sección ocupa toda la pantalla */
+  padding: 4rem 10%; /* Espacio a los lados cómodo */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centrado vertical */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Logo pequeño flotante en móviles - Sección inicio */
-#inicio::before {
-  content: "";
-  display: none;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 60px;
-  height: 60px;
-  background: url("../images/logo-devs-colmex.png") center/contain no-repeat;
-  border: 2px solid var(--color-terciario);
-  border-radius: 8px;
-}
-
+/* Títulos Generales */
 .titulo-principal {
-  font-family: var(--fuente-krona);
-  font-size: var(--tamaño-titulo-principal);
+  font-family: var(--fuente-titulos);
+  font-size: 3rem; /* Tamaño grande pero controlado */
   line-height: 1.2;
-  margin-bottom: var(--espaciado-medio);
-  word-wrap: break-word;
+  margin-bottom: 1.5rem;
 }
 
 .destacado {
-  color: var(--color-terciario);
+  color: var(--color-acento);
   display: block;
-  margin-top: var(--espaciado-pequeno);
 }
 
-.intro-texto {
-  font-size: var(--tamaño-parrafo);
-  line-height: 1.8;
-  max-width: 900px;
-}
-
-.resaltado {
-  color: var(--color-terciario);
-  font-weight: 600;
-}
-
-/* =========================================
-   3.2 SECCIÓN SOBRE NOSOTROS (#nosotros)
-   ========================================= */
-.subtitulo {
-  font-family: var(--fuente-krona);
-  font-size: var(--tamaño-subtitulo);
-  color: var(--color-terciario);
-  margin-bottom: var(--espaciado-grande);
-  text-align: left;
-}
-
+.intro-texto,
 .texto-bloque p {
-  font-size: var(--tamaño-parrafo);
-  line-height: 1.8;
-  margin-bottom: var(--espaciado-medio);
-  max-width: 900px;
+  font-size: 1.1rem;
+  max-width: 800px;
+  opacity: 0.9;
+  margin-bottom: 2rem;
 }
 
-.company-intro {
-  margin-bottom: var(--espaciado-grande);
-  border-left: 5px solid var(--color-terciario);
-  padding-left: clamp(1rem, 3vw, 2rem);
-}
-
-/* Grid responsivo - Se adapta automáticamente */
-.corporate-grid {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(clamp(250px, 80vw, 300px), 1fr)
-  );
-  gap: var(--espaciado-medio);
-  width: 100%;
-}
-
-.corp-card {
-  background-color: rgba(16, 46, 80, 0.5);
-  border: 1px solid rgba(209, 162, 115, 0.3);
-  border-radius: 4px;
-  padding: clamp(1.5rem, 3vw, 2.5rem);
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.corp-card:hover {
-  border-color: var(--color-terciario);
-  transform: translateY(-5px);
-  background-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-}
-
-.corp-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background-color: var(--color-terciario);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s ease;
-}
-
-.corp-card:hover::before {
-  transform: scaleX(1);
-}
-
-.corp-title {
-  font-family: var(--fuente-krona);
-  color: var(--color-terciario);
-  font-size: var(--tamaño-card-h3);
-  margin-bottom: var(--espaciado-medio);
+.subtitulo {
+  font-family: var(--fuente-titulos);
+  font-size: 2rem;
+  color: var(--color-acento);
+  margin-bottom: 3rem;
   position: relative;
   display: inline-block;
 }
 
-.corp-card p {
-  font-family: var(--fuente-montserrat);
-  font-size: clamp(0.9rem, 1.8vw, 1rem);
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* =========================================
-   3.3 SECCIÓN DE HABILIDADES (#habilidades)
-   ========================================= */
+/* Tarjetas (Skills / Proyectos) */
+.corporate-grid,
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(clamp(200px, 75vw, 280px), 1fr)
-  );
-  gap: var(--espaciado-medio);
-  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
+.corp-card,
 .skill-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: clamp(1.5rem, 3vw, 2rem);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2rem;
   border-radius: 12px;
   border: 1px solid transparent;
-  transition: all 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
 }
 
+.corp-card:hover,
 .skill-card:hover {
-  border-color: var(--color-terciario);
   transform: translateY(-5px);
-  background-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-acento);
+  background: rgba(255, 255, 255, 0.06);
 }
 
+.corp-card h3,
 .skill-card h3 {
-  font-family: var(--fuente-krona);
-  color: var(--color-terciario);
-  margin-bottom: var(--espaciado-medio);
-  font-size: var(--tamaño-card-h3);
-}
-
-.skill-card p {
-  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--fuente-titulos);
+  color: var(--color-acento);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
 }
 
 /* =========================================
-   3.4 SECCIÓN DE CONTACTO (#contacto)
+   4. FORMULARIO DE CONTACTO
    ========================================= */
 .contact-form {
+  max-width: 600px;
   width: 100%;
-  max-width: 700px;
 }
 
 .form-group {
-  margin-bottom: var(--espaciado-medio);
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: var(--espaciado-pequeno);
-  color: var(--color-terciario);
-  font-weight: 600;
-  font-family: var(--fuente-krona);
-  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+  font-family: var(--fuente-titulos);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-acento);
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: clamp(0.8rem, 2vw, 1rem);
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   color: white;
-  font-family: var(--fuente-montserrat);
-  font-size: clamp(0.9rem, 1.8vw, 1rem);
-  transition: border-color 0.3s;
-  resize: vertical;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--fuente-cuerpo);
+  font-size: 1rem;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--color-terciario);
-  background-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-acento);
 }
 
 .btn-submit {
-  display: inline-block;
-  padding: clamp(0.9rem, 2vw, 1rem) clamp(2rem, 4vw, 2.5rem);
+  padding: 1rem 2.5rem;
   background-color: transparent;
-  color: var(--color-terciario);
-  border: 2px solid var(--color-terciario);
-  border-radius: 8px;
-  font-family: var(--fuente-krona);
-  font-size: clamp(0.9rem, 1.8vw, 1rem);
+  color: var(--color-acento);
+  border: 2px solid var(--color-acento);
+  font-family: var(--fuente-titulos);
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s;
-  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .btn-submit:hover {
-  background-color: var(--color-terciario);
-  color: var(--color-primario);
-  transform: translateY(-2px);
-}
-
-.btn-submit:active {
-  transform: translateY(0);
+  background-color: var(--color-acento);
+  color: var(--color-fondo);
 }
 
 /* =========================================
-   4. OPTIMIZACIONES FINALES
+   5. RESPONSIVE (Móviles)
    ========================================= */
+@media (max-width: 900px) {
+  .layout-wrapper {
+    flex-direction: column; /* Apila todo verticalmente */
+  }
 
-/* Scrollbar personalizada en navegadores Chrome/Edge */
-::-webkit-scrollbar {
-  width: 10px;
-}
+  .sidebar-menu {
+    position: relative; /* Ya no fija */
+    width: 100%;
+    height: auto;
+    padding: 2rem 1rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(209, 162, 115, 0.2);
+  }
 
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-}
+  .perfil-resumen img.sidebar-foto {
+    width: 120px;
+    height: 120px;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: var(--color-terciario);
-  border-radius: 5px;
-}
+  .content-area {
+    margin-left: 0;
+    width: 100%;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-cuarternario);
-}
+  .seccion-contenido {
+    padding: 3rem 5%;
+    min-height: auto; /* En móvil no forzamos altura completa */
+    padding-bottom: 5rem;
+  }
 
-/* Optimización de rendimiento */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  .titulo-principal {
+    font-size: 2rem;
+  }
 
-/* Evitar zoom en inputs en móviles */
-input,
-textarea,
-select {
-  font-size: 16px;
+  /* Botón hamburguesa (si lo usas en JS) */
+  .hamburger-menu {
+    display: block; /* O ajusta según tu JS */
+  }
 }
