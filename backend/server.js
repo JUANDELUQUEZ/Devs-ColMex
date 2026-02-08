@@ -186,8 +186,8 @@ app.get("/api/mensajes", (req, res) => {
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════╗
-║   🚀 SERVIDOR INICIADO CORRECTAMENTE  ║
-║   http://localhost:${PORT}            ║
+║   🚀 SERVIDOR INICIADO CORRECTAMENTE   ║
+║   http://localhost:${PORT}             ║
 ╚════════════════════════════════════════╝
   `);
 });
