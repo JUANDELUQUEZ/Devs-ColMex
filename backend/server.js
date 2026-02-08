@@ -38,14 +38,43 @@ app.use(express.json());
 // =============================================================================
 // Actualización forzada para limpiar caché de Render - v2
 // Configuración de la Base de Datos (Modo Producción)
+// =============================================================================
+// CONFIGURACIÓN DE BASE DE DATOS (BLINDADA) 🛡️
+// =============================================================================
+
+console.log("🔍 DIAGNÓSTICO DE VARIABLES:");
+console.log(
+  "   -> HOST:",
+  process.env.DB_HOST ? `"${process.env.DB_HOST}"` : "❌ INDEFINIDO",
+);
+console.log(
+  "   -> USER:",
+  process.env.DB_USER ? `"${process.env.DB_USER}"` : "❌ INDEFINIDO",
+);
+console.log(
+  "   -> PORT:",
+  process.env.DB_PORT ? `"${process.env.DB_PORT}"` : "❌ INDEFINIDO",
+);
+console.log(
+  "   -> NAME:",
+  process.env.DB_NAME ? `"${process.env.DB_NAME}"` : "❌ INDEFINIDO",
+);
+// No imprimimos la password por seguridad, solo su longitud
+console.log(
+  "   -> PASS:",
+  process.env.DB_PASSWORD
+    ? `[OCULTO] (${process.env.DB_PASSWORD.length} caracteres)`
+    : "❌ VACÍA",
+);
+
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT, // <--- AGREGADO: Usar el puerto de Aiven
+  host: process.env.DB_HOST ? process.env.DB_HOST.trim() : "",
+  user: process.env.DB_USER ? process.env.DB_USER.trim() : "",
+  password: process.env.DB_PASSWORD ? process.env.DB_PASSWORD.trim() : "",
+  database: process.env.DB_NAME ? process.env.DB_NAME.trim() : "",
+  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306, // Forzamos que sea un número
   ssl: {
-    rejectUnauthorized: false, // <--- AGREGADO: Permite la conexión segura obligatoria
+    rejectUnauthorized: false,
   },
 });
 
