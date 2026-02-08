@@ -3,9 +3,21 @@
 // =============================================================================
 
 const express = require("express");
-const mysql = require("mysql2");
 const cors = require("cors");
 require("dotenv").config();
+
+// --- ZONA DE PRUEBA DE ADN ---
+try {
+  const mysqlVersion = require("mysql2/package.json").version;
+  console.log("🧪 PRUEBA DE ADN: Estoy usando mysql2 versión:", mysqlVersion);
+} catch (error) {
+  console.log(
+    "🚨 ALERTA ROJA: No encuentro mysql2. Seguramente estoy usando la librería vieja.",
+  );
+}
+// -----------------------------
+
+const mysql = require("mysql2"); // Esta línea ya la tienes, déjala igual.
 
 // Crear aplicación Express
 const app = express();
