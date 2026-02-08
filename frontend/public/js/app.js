@@ -2,19 +2,18 @@
 // CONFIGURACIÓN
 // =============================================================================
 
-const URL = "https://devs-colmex.onrender.com/api/mensajes";
-const TIMEOUT_MS = 5000; // Tiempo máximo de espera en milisegundos
+// CORREGIDO: Usamos un nombre estándar y claro
+const API_URL = "https://devs-colmex.onrender.com/api/mensajes";
+
+// CORREGIDO: Aumentado a 60 segundos porque Render tarda en despertar
+const TIMEOUT_MS = 60000;
 
 // =============================================================================
 // INICIALIZACIÓN DEL DOCUMENTO
 // =============================================================================
 
-/**
- * Se ejecuta cuando el DOM está completamente cargado
- * Inicializa los eventos del formulario de contacto
- */
 document.addEventListener("DOMContentLoaded", () => {
-  const formulario = document.getElementById("contactForm");
+  const formulario = document.getElementById("contactForm"); // Asegúrate que tu form tenga este ID en el HTML
 
   if (!formulario) {
     console.warn("⚠️  Formulario de contacto no encontrado en el DOM");
@@ -29,11 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // FUNCIONES AUXILIARES
 // =============================================================================
 
-/**
- * Valida los datos del formulario
- * @param {Object} datos - Objeto con nombre, email y mensaje
- * @returns {Object} { valido: boolean, errores: string[] }
- */
 function validarDatos(datos) {
   const errores = [];
 
@@ -59,22 +53,13 @@ function validarDatos(datos) {
   };
 }
 
-/**
- * Valida el formato de un email
- * @param {string} email - Email a validar
- * @returns {boolean} True si el email es válido
- */
 function validarEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 }
 
-/**
- * Obtiene los datos del formulario
- * @param {HTMLFormElement} formulario - Elemento del formulario
- * @returns {Object} Objeto con nombre, email y mensaje
- */
 function obtenerDatosFormulario(formulario) {
+  // Asegúrate de que los inputs tengan estos IDs en tu HTML
   return {
     nombre: document.getElementById("nombre").value,
     email: document.getElementById("email").value,
@@ -82,16 +67,12 @@ function obtenerDatosFormulario(formulario) {
   };
 }
 
-/**
- * Envía los datos al servidor
- * @param {Object} datos - Datos para enviar
- * @returns {Promise<Response>} Respuesta del servidor
- */
 async function enviarDatosAlServidor(datos) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
+    // CORREGIDO: Ahora sí usamos la variable correcta API_URL
     const respuesta = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -109,11 +90,6 @@ async function enviarDatosAlServidor(datos) {
   }
 }
 
-/**
- * Muestra un mensaje al usuario
- * @param {string} mensaje - Texto del mensaje
- * @param {string} tipo - Tipo de mensaje: 'exito', 'error', 'info'
- */
 function mostrarMensaje(mensaje, tipo = "info") {
   const emoji = {
     exito: "✅",
@@ -122,7 +98,7 @@ function mostrarMensaje(mensaje, tipo = "info") {
   };
 
   const prefix = emoji[tipo] || "📢";
-  console.log(`${prefix} ${mensaje}`);
+  // Usamos alert para asegurar que lo veas, pero podrías usar un div en el HTML
   alert(`${prefix} ${mensaje}`);
 }
 
@@ -130,19 +106,11 @@ function mostrarMensaje(mensaje, tipo = "info") {
 // MANEJADOR PRINCIPAL DEL FORMULARIO
 // =============================================================================
 
-/**
- * Maneja el envío del formulario de contacto
- * @param {Event} evento - Evento del formulario
- */
 async function manejarEnvioFormulario(evento) {
   evento.preventDefault();
 
   const formulario = evento.target;
-
-  // Obtener datos del formulario
   const datosFormulario = obtenerDatosFormulario(formulario);
-
-  // Validar datos
   const validacion = validarDatos(datosFormulario);
 
   if (!validacion.valido) {
@@ -156,23 +124,28 @@ async function manejarEnvioFormulario(evento) {
   try {
     console.log("📤 Enviando mensaje al servidor...");
 
-    // Enviar datos al servidor
+    // Feedback visual simple (cambiar texto del botón si quieres)
+    const botonSubmit = formulario.querySelector("button[type='submit']");
+    const textoOriginal = botonSubmit ? botonSubmit.innerText : "";
+    if (botonSubmit) {
+      botonSubmit.innerText = "Enviando... (Espere unos segundos)";
+      botonSubmit.disabled = true;
+    }
+
     const respuesta = await enviarDatosAlServidor(datosFormulario);
     const resultado = await respuesta.json();
 
-    // Procesar respuesta del servidor
     if (respuesta.ok) {
       console.log("✅ Mensaje enviado exitosamente");
       mostrarMensaje(
         "¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.",
         "exito",
       );
-      formulario.reset(); // Limpiar formulario
+      formulario.reset();
     } else {
       console.error("❌ Error del servidor:", resultado);
       mostrarMensaje(
-        resultado.error ||
-          "Ocurrió un error al enviar el mensaje. Intenta nuevamente.",
+        resultado.error || "Ocurrió un error al enviar el mensaje.",
         "error",
       );
     }
@@ -181,14 +154,22 @@ async function manejarEnvioFormulario(evento) {
 
     if (error.name === "AbortError") {
       mostrarMensaje(
-        "La solicitud tardó demasiado. Verifica tu conexión a internet e intenta nuevamente.",
+        "El servidor está despertando. Por favor intenta de nuevo en 30 segundos.",
         "error",
       );
     } else {
+      // CORREGIDO: Mensaje de error real
       mostrarMensaje(
-        "No se pudo conectar con el servidor. Verifica que el backend (puerto 3000) esté encendido.",
+        "No se pudo conectar con el servidor en la nube. Revisa tu internet o intenta más tarde.",
         "error",
       );
+    }
+  } finally {
+    // Restaurar el botón pase lo que pase
+    const botonSubmit = formulario.querySelector("button[type='submit']");
+    if (botonSubmit) {
+      botonSubmit.innerText = textoOriginal || "Enviar";
+      botonSubmit.disabled = false;
     }
   }
 }
