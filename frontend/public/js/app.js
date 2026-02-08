@@ -2,7 +2,7 @@
 // CONFIGURACIÓN
 // =============================================================================
 
-const API_URL = "http://localhost:3000/api/mensajes";
+const URL = "https://devs-colmex.onrender.com/api/mensajes";
 const TIMEOUT_MS = 5000; // Tiempo máximo de espera en milisegundos
 
 // =============================================================================
