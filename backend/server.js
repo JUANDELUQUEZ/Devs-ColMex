@@ -1,273 +1,285 @@
 // =============================================================================
-// IMPORTACIONES Y CONFIGURACIÓN INICIAL
+// DEPENDENCIAS Y CONFIGURACIÓN DE APLICACIÓN
 // =============================================================================
+/**
+ * STACK TECNOLÓGICO:
+ * - Express: Framework HTTP minimalista para construir APIs REST
+ * - CORS: Middleware para gestionar solicitudes cross-origin (CSRF protection)
+ * - Mongoose: ODM (Object Document Mapper) para MongoDB con validaciones
+ * - dotenv: Carga variables de entorno desde .env (NO commitear credenciales)
+ */
 
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
-// --- ZONA DE PRUEBA DE ADN ---
-try {
-  const mysqlVersion = require("mysql2/package.json").version;
-  console.log("🧪 PRUEBA DE ADN: Estoy usando mysql2 versión:", mysqlVersion);
-} catch (error) {
-  console.log(
-    "🚨 ALERTA ROJA: No encuentro mysql2. Seguramente estoy usando la librería vieja.",
-  );
-}
-// -----------------------------
-
-const mysql = require("mysql2"); // Esta línea ya la tienes, déjala igual.
-
-// Crear aplicación Express
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// =============================================================================
-// MIDDLEWARE
-// =============================================================================
-
-// Habilitar CORS para permitir solicitudes desde el frontend
-app.use(cors());
-
-// Parsear JSON en el cuerpo de las solicitudes
-app.use(express.json());
+/**
+ * NOTA ARQUITECTÓNICA:
+ * Puerto configurable por variables de entorno para soportar
+ * múltiples entornos (Render, Railway, Heroku, localhost)
+ */
 
 // =============================================================================
-// CONFIGURACIÓN DE BASE DE DATOS
+// CONFIGURACIÓN DE MIDDLEWARE
 // =============================================================================
-// Actualización forzada para limpiar caché de Render - v2
-// Configuración de la Base de Datos (Modo Producción)
-// =============================================================================
-// CONFIGURACIÓN DE BASE DE DATOS (BLINDADA) 🛡️
-// =============================================================================
+/**
+ * ORDEN CRÍTICO: El orden de middleware afecta directamente el flujo
+ * 1. CORS: Debe ejecutarse primero para permitir solicitudes cross-origin
+ * 2. JSON Parser: Procesa application/json en req.body
+ */
 
-console.log("🔍 DIAGNÓSTICO DE VARIABLES:");
-console.log(
-  "   -> HOST:",
-  process.env.DB_HOST ? `"${process.env.DB_HOST}"` : "❌ INDEFINIDO",
-);
-console.log(
-  "   -> USER:",
-  process.env.DB_USER ? `"${process.env.DB_USER}"` : "❌ INDEFINIDO",
-);
-console.log(
-  "   -> PORT:",
-  process.env.DB_PORT ? `"${process.env.DB_PORT}"` : "❌ INDEFINIDO",
-);
-console.log(
-  "   -> NAME:",
-  process.env.DB_NAME ? `"${process.env.DB_NAME}"` : "❌ INDEFINIDO",
-);
-// No imprimimos la password por seguridad, solo su longitud
-console.log(
-  "   -> PASS:",
-  process.env.DB_PASSWORD
-    ? `[OCULTO] (${process.env.DB_PASSWORD.length} caracteres)`
-    : "❌ VACÍA",
-);
+app.use(cors()); // ⚠️  TODO en v2: Restricciones a orígenes específicos
+app.use(express.json()); // Límite por defecto: 100kb (ajustar si hay uploads)
 
-// Validar que todas las variables necesarias estén definidas
-if (
-  !process.env.DB_HOST ||
-  !process.env.DB_USER ||
-  !process.env.DB_PASSWORD ||
-  !process.env.DB_NAME
-) {
-  console.error(
-    "❌ ERROR: Falta configurar las variables de entorno de la Base de Datos",
-  );
+// =============================================================================
+// CONEXIÓN A MONGODB ATLAS
+// =============================================================================
+/**
+ * VARIABLES REQUERIDAS:
+ * - MONGO_URI: Connection string (mongodb+srv://user:pass@cluster.mongodb.net/db)
+ *
+ * PATRONES IMPLEMENTADOS:
+ * - Early validation: Verificar configuración crítica antes de iniciar
+ * - Fail fast: Detener si faltan credenciales
+ *
+ * SEGURIDAD:
+ * ⚠️  MONGO_URI contiene credenciales. NUNCA commitear al repositorio.
+ * Usar variables de entorno en (Render, Railway, Heroku, AWS)
+ */
+
+if (!process.env.MONGO_URI) {
+  console.error("[CRITICAL] Missing MONGO_URI in .env file");
   process.exit(1);
 }
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOST.trim(),
-  user: process.env.DB_USER.trim(),
-  password: process.env.DB_PASSWORD.trim(),
-  database: process.env.DB_NAME.trim(),
-  port: Number(process.env.DB_PORT) || 3306,
-  waitForConnections: true,
-  connectionLimit: 1,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelayMs: 0,
-  ssl: "amazon",
-});
-
-// =============================================================================
-// CONEXIÓN A MYSQL Y INICIALIZACIÓN
-// =============================================================================
-
-/**
- * Conectar a la base de datos MySQL
- * Si la conexión falla, se muestra el error en consola
- * Si tiene éxito, se crea la tabla de mensajes si no existe
- */
-db.connect((err) => {
-  if (err) {
-    console.error("❌ Error conectando a MySQL:", err.message);
-    console.error("⚠️  Reintentando conexión en 5 segundos...");
-    setTimeout(() => {
-      db.connect();
-    }, 5000);
-    return;
-  }
-  console.log("✅ Conectado a MySQL correctamente.");
-
-  // Crear tabla de mensajes si no existe
-  initializeDatabase();
-});
-
-// Manejar desconexiones inesperadas
-db.on("error", (err) => {
-  console.error("❌ Error en la conexión de MySQL:", err);
-  if (err.code === "PROTOCOL_CONNECTION_LOST") {
-    console.log("🔄 Reconectando a la base de datos...");
-    db.connect();
-  }
-  if (err.code === "ER_CON_COUNT_ERROR") {
-    console.log("🔄 Demasiadas conexiones. Reconectando...");
-    setTimeout(() => {
-      db.connect();
-    }, 2000);
-  }
-  if (err.code === "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR") {
-    console.log("🔄 Fatal error. Reconectando...");
-    db.connect();
-  }
-});
-
-/**
- * Inicializa la base de datos creando la tabla si no existe
- */
-function initializeDatabase() {
-  const sqlCreate = `
-    CREATE TABLE IF NOT EXISTS mensajes_nuevos (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      nombre VARCHAR(100) NOT NULL,
-      email VARCHAR(100) NOT NULL,
-      mensaje TEXT NOT NULL,
-      fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-  `;
-
-  db.query(sqlCreate, (err) => {
-    if (err) {
-      console.error("❌ Error creando tabla:", err.message);
-    } else {
-      console.log("✅ Tabla 'mensajes_nuevos' verificada/creada.");
-    }
+// Configuración con opciones de resiliencia
+mongoose
+  .connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    retryWrites: true,
+  })
+  .then(() => {
+    console.log("[DB] MongoDB connection established");
+  })
+  .catch((err) => {
+    console.error("[DB] Connection failed:", err.message);
+    // Nota: En producción, implementar retry logic más robusto
   });
-}
 
 // =============================================================================
-// FUNCIONES AUXILIARES
+// ESQUEMA DE DATOS Y MODELO (PERSISTENCE LAYER)
 // =============================================================================
-
 /**
- * Valida que los datos del formulario sean válidos
- * @param {string} nombre - Nombre del usuario
- * @param {string} email - Email del usuario
- * @param {string} mensaje - Mensaje enviado
- * @returns {boolean} True si los datos son válidos
+ * PATRÓN ARQUITECTÓNICO: Document Store con ODM (Mongoose)
+ *
+ * VALIDACIONES:
+ * - required: Enforced tanto en aplicación como en schema
+ * - trim: Normaliza espacios en blanco (\"  Juan  \" -> \"Juan\")
+ * - lowercase: Normalización de email
+ * - immutable: La fecha no puede ser modificada post-creación
+ *
+ * OPTIMIZACIONES:
+ * - Index en 'fecha': Accelera queries con .sort({ fecha: -1 })
+ * - Lean queries: Devuelve POJOs en lugar de Mongoose documents
+ *
+ * MEJORAS FUTURAS (v2.0):
+ * - Validación regex para email
+ * - Soft delete: Agregar field 'deletedAt'
+ * - Versionado de cambios
  */
-function validarDatos(nombre, email, mensaje) {
-  return (
-    nombre &&
-    email &&
-    mensaje &&
-    nombre.trim() !== "" &&
-    email.trim() !== "" &&
-    mensaje.trim() !== ""
-  );
-}
+
+const MensajeSchema = new mongoose.Schema({
+  nombre: {
+    type: String,
+    required: [true, "Nombre es requerido"],
+    trim: true,
+    maxlength: 100,
+  },
+  email: {
+    type: String,
+    required: [true, "Email es requerido"],
+    trim: true,
+    lowercase: true,
+  },
+  mensaje: {
+    type: String,
+    required: [true, "Mensaje es requerido"],
+  },
+  fecha: {
+    type: Date,
+    default: Date.now,
+    immutable: true,
+  },
+});
+
+// Optimización: Índice para queries frecuentes
+MensajeSchema.index({ fecha: -1 });
+
+const Mensaje = mongoose.model("Mensaje", MensajeSchema);
 
 // =============================================================================
-// RUTAS API - POST (Crear datos)
+// RUTAS API - POST /api/mensajes (CREATE)
 // =============================================================================
-
 /**
- * POST /api/mensajes
- * Recibe un nuevo mensaje de contacto y lo guarda en la base de datos
+ * ENDPOINT: POST /api/mensajes
+ * RESPONSABILIDAD: Persistir nuevo mensaje de contacto
+ *
+ * HTTP STATUS CODES:
+ *   - 201 CREATED: Creación exitosa
+ *   - 400 BAD REQUEST: Validación fallida
+ *   - 500 INTERNAL SERVER ERROR: Error en base de datos
+ *
+ * ARQUITECTURA:
+ * - Double validation: Schema + runtime checks
+ * - Async/await: Mejor readabilidad que promise chains
  */
-app.post("/api/mensajes", (req, res) => {
-  const { nombre, email, mensaje } = req.body;
 
-  // Validar que todos los campos requeridos estén presentes
-  if (!validarDatos(nombre, email, mensaje)) {
-    return res.status(400).json({
-      error: "Todos los campos son obligatorios y no pueden estar vacíos.",
+app.post("/api/mensajes", async (req, res) => {
+  try {
+    const { nombre, email, mensaje } = req.body;
+
+    // VALIDACIÓN: Doble check para máxima seguridad
+    if (!nombre?.trim() || !email?.trim() || !mensaje?.trim()) {
+      return res.status(400).json({
+        success: false,
+        error: "Todos los campos son obligatorios",
+        code: "VALIDATION_ERROR",
+      });
+    }
+
+    // CREACIÓN: Instanciar documento
+    const nuevoMensaje = new Mensaje({
+      nombre: nombre.trim(),
+      email: email.trim(),
+      mensaje: mensaje.trim(),
+    });
+
+    // PERSISTENCIA: Guardar en base de datos
+    const resultado = await nuevoMensaje.save();
+
+    console.log(`[API] Message created - ID: ${resultado._id}`);
+
+    // RESPUESTA: HTTP 201 estándar
+    res.status(201).json({
+      success: true,
+      message: "Mensaje almacenado correctamente",
+      data: {
+        id: resultado._id,
+        createdAt: resultado.fecha,
+      },
+    });
+  } catch (error) {
+    console.error(`[ERROR] POST /api/mensajes - ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: "No se pudo procesar la solicitud",
+      code: "DATABASE_ERROR",
     });
   }
-
-  // Insertar el mensaje en la base de datos
-  const query =
-    "INSERT INTO mensajes_nuevos (nombre, email, mensaje) VALUES (?, ?, ?)";
-
-  db.query(
-    query,
-    [nombre.trim(), email.trim(), mensaje.trim()],
-    (err, result) => {
-      if (err) {
-        console.error("❌ Error al insertar mensaje:", err.message);
-        return res.status(500).json({
-          error: "Error interno del servidor. No se pudo guardar el mensaje.",
-        });
-      }
-
-      console.log(
-        "✅ Mensaje guardado exitosamente (ID:",
-        result.insertId + ")",
-      );
-      res.status(201).json({
-        message: "Mensaje guardado con éxito.",
-        id: result.insertId,
-      });
-    },
-  );
 });
 
 // =============================================================================
-// RUTAS API - GET (Leer datos)
+// RUTAS API - GET /api/mensajes (READ - PROTEGIDA)
 // =============================================================================
 /**
- * GET /api/mensajes
- * PROTEGIDO: Solo permite ver mensajes si se envía la clave correcta
+ * ENDPOINT: GET /api/mensajes?clave=<ADMIN_SECRET>
+ * RESPONSABILIDAD: Recuperar todos los mensajes (ADMIN ONLY)
+ *
+ * HTTP STATUS CODES:
+ *   - 200 OK: Éxito
+ *   - 403 FORBIDDEN: Autenticación fallida
+ *   - 500 ERROR: Error BD
+ *
+ * SEGURIDAD:
+ * ⚠️  CRÍTICO: Query param con plain text comparison
+ * Vulnerabilidades:
+ * - Timing attacks: Usar crypto.timingSafeEqual()
+ * - Query params en logs y browser history
+ * TODO v2.0: JWT tokens en Authorization header
+ *
+ * PERFORMANCE:
+ * - .lean(): POJOs en lugar de Mongoose documents
+ * - Índice en 'fecha' optimiza .sort()
+ * - Grandes datasets: Implementar paginación
  */
-app.get("/api/mensajes", (req, res) => {
-  // 1. Buscamos la clave en la URL (ej: ?clave=JuanElMejorDev2026)
-  const { clave } = req.query;
 
-  // 2. Verificamos si la clave coincide con la del archivo .env
-  if (clave !== process.env.ADMIN_SECRET) {
-    return res
-      .status(403)
-      .json({ error: "Acceso denegado. No tienes la llave." });
-  }
+app.get("/api/mensajes", async (req, res) => {
+  try {
+    // AUTENTICACIÓN: Validar credencial
+    const { clave } = req.query;
 
-  // 3. Si la clave es correcta, procedemos a buscar en la Base de Datos
-  const query = "SELECT * FROM mensajes_nuevos ORDER BY fecha DESC"; // Asegúrate que la tabla sea la correcta
+    const isAuthorized = clave && clave === process.env.ADMIN_SECRET;
 
-  db.query(query, (err, resultados) => {
-    if (err) {
-      console.error("❌ Error al obtener mensajes:", err.message);
-      return res.status(500).json({
-        error: "Error interno del servidor.",
+    if (!isAuthorized) {
+      return res.status(403).json({
+        success: false,
+        error: "Autenticación fallida",
+        code: "UNAUTHORIZED",
       });
     }
-    res.status(200).json(resultados);
-  });
+
+    // QUERY: Recuperar ordenados desc por fecha
+    const mensajes = await Mensaje.find().sort({ fecha: -1 }).lean().exec();
+
+    // RESPUESTA: Metadata útil
+    res.status(200).json({
+      success: true,
+      count: mensajes.length,
+      data: mensajes,
+    });
+  } catch (error) {
+    console.error(`[ERROR] GET /api/mensajes - ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: "Error en la consulta",
+      code: "DATABASE_ERROR",
+    });
+  }
 });
 
 // =============================================================================
-// INICIAR SERVIDOR
+// INICIALIZACIÓN DEL SERVIDOR
 // =============================================================================
+// INICIALIZACIÓN DEL SERVIDOR
+// =============================================================================
+/**
+ * PATRÓN: Server bootstrap
+ *
+ * FLUJO DE STARTUP:
+ * 1. Dotenv carga variables de entorno
+ * 2. Middleware configurado
+ * 3. Conexión MongoDB iniciada (asincrónica)
+ * 4. Routes configuradas
+ * 5. Server escuchando en PORT
+ *
+ * NOTA IMPORTANTE:
+ * - Server inicia antes de que MongoDB esté ready
+ * - Requests fallarán hasta que .connect() resuelva
+ * - Para bloquear: Usar async IIFE o refactorizar
+ *
+ * PRODUCCIÓN:
+ * - Monitorear logs de conexión MongoDB
+ * - Implementar health checks: GET /health
+ * - Agregar graceful shutdown en SIGTERM
+ */
 
-app.listen(PORT, () => {
-  console.log(`
-╔════════════════════════════════════════╗
-║   🚀 SERVIDOR INICIADO CORRECTAMENTE   ║
-║   http://localhost:${PORT}             ║
-╚════════════════════════════════════════╝
-  `);
+const server = app.listen(PORT, () => {
+  console.log(`[APP] Server initialized - PORT ${PORT}`);
+  console.log(`[TIME] ${new Date().toISOString()}`);
 });
+
+/**
+ * MEJORA FUTURA: Graceful shutdown
+ * process.on("SIGTERM", () => {
+ *   console.log("SIGTERM received, closing gracefully...");
+ *   server.close(() => {
+ *     mongoose.connection.close();
+ *     process.exit(0);
+ *   });
+ * });
+ */
