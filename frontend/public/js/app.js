@@ -26,31 +26,34 @@ document.addEventListener("DOMContentLoaded", () => {
 // =============================================================================
 
 function inicializarMenuHamburguesa() {
-  const hamburgerBtn = document.getElementById("hamburgerBtn");
+  const menuToggle = document.getElementById("menuToggle");
   const sidebarMenu = document.getElementById("sidebarMenu");
   const navLinks = document.querySelectorAll(".nav-link");
 
-  if (!hamburgerBtn || !sidebarMenu) {
-    console.warn("Menú hamburguesa no encontrado");
+  if (!menuToggle || !sidebarMenu) {
+    console.warn("⚠️ Menú hamburguesa no encontrado");
     return;
   }
 
-  hamburgerBtn.addEventListener("click", () => {
-    hamburgerBtn.classList.toggle("active");
-    sidebarMenu.classList.toggle("menu-open");
+  // Abrir/cerrar menú al hacer clic en el botón
+  menuToggle.addEventListener("click", () => {
+    menuToggle.classList.toggle("active");
+    sidebarMenu.classList.toggle("active");
   });
 
+  // Cerrar menú al hacer clic en un enlace de navegación
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {
-      hamburgerBtn.classList.remove("active");
-      sidebarMenu.classList.remove("menu-open");
+      menuToggle.classList.remove("active");
+      sidebarMenu.classList.remove("active");
     });
   });
 
+  // Cerrar menú al redimensionar la ventana si está en desktop
   window.addEventListener("resize", () => {
-    if (window.innerWidth > 768) {
-      hamburgerBtn.classList.remove("active");
-      sidebarMenu.classList.remove("menu-open");
+    if (window.innerWidth > 900) {
+      menuToggle.classList.remove("active");
+      sidebarMenu.classList.remove("active");
     }
   });
 }

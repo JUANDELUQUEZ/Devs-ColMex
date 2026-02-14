@@ -278,6 +278,68 @@ body {
 }
 
 /* =========================================
+   HEADER MÓVIL Y BOTÓN HAMBURGUESA
+   ========================================= */
+.mobile-header {
+  display: none; /* Oculto por defecto */
+  background-color: var(--color-sidebar);
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 101;
+  border-bottom: 1px solid rgba(209, 162, 115, 0.2);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 102;
+}
+
+.hamburger-line {
+  width: 25px;
+  height: 3px;
+  background-color: var(--color-acento);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.menu-toggle:hover .hamburger-line {
+  background-color: var(--color-texto);
+}
+
+/* Animación del botón cuando está activo */
+.menu-toggle.active .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(10px, 10px);
+}
+
+.menu-toggle.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+.header-logo {
+  flex: 1;
+  text-align: center;
+}
+
+.header-logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* =========================================
    RESPONSIVE (Móviles)
    ========================================= */
 @media (max-width: 900px) {
@@ -285,13 +347,29 @@ body {
     flex-direction: column;
   }
 
+  /* Mostrar header móvil */
+  .mobile-header {
+    display: flex;
+  }
+
   .sidebar-menu {
-    position: relative;
-    width: 100%;
-    height: auto;
+    position: fixed;
+    left: 0;
+    top: 70px; /* Altura del header */
+    width: 80%; /* Ancho del menú desplegable */
+    max-width: 300px;
+    height: calc(100vh - 70px);
     padding: 2rem 1rem;
-    border-right: none;
-    border-bottom: 1px solid rgba(209, 162, 115, 0.2);
+    border-right: 1px solid rgba(209, 162, 115, 0.2);
+    border-bottom: none;
+    transform: translateX(-100%); /* Oculto por defecto */
+    transition: transform 0.3s ease;
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  .sidebar-menu.active {
+    transform: translateX(0); /* Visible cuando está abierto */
   }
 
   .perfil-resumen img.sidebar-logo {
